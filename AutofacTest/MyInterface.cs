@@ -4,13 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Heap
+namespace AutofacTest
 {
-    class Program
+    public interface MyInterface
     {
-        static void Main(string[] args)
-        {
-            
-        }
+
     }
 }
