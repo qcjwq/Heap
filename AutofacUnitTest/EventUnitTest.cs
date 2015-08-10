@@ -48,8 +48,8 @@ namespace AutofacUnitTest
         {
             var builder = new ContainerBuilder();
             builder.RegisterType<MyClassWithMethod>().OnActivating(e => e.Instance.Add(5));
-
             IContainer container = builder.Build();
+
             Assert.AreEqual(5, container.Resolve<MyClassWithMethod>().Index);
         }
     }

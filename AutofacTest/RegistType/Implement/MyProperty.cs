@@ -1,4 +1,4 @@
-﻿namespace AutofacTest.RegistType
+﻿namespace AutofacTest.RegistType.Implement
 {
     public class MyProperty
     {

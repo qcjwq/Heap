@@ -7,6 +7,7 @@ using Autofac.Builder;
 using Autofac.Core.Registration;
 using AutofacTest;
 using AutofacTest.RegistType;
+using AutofacTest.RegistType.Implement;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using NSubstitute.Core;
@@ -27,7 +28,6 @@ namespace AutofacUnitTest
         {
             var builder = new ContainerBuilder();
             builder.RegisterType<MyClass>();
-
             IContainer container = builder.Build();
 
             var actual = container.Resolve<MyClass>();
@@ -42,7 +42,6 @@ namespace AutofacUnitTest
         {
             var builder = new ContainerBuilder();
             builder.Register(c => new MyClass()).As<MyInterface>();
-
             IContainer container = builder.Build();
 
             Assert.IsNotNull(container.Resolve<MyInterface>());
@@ -56,7 +55,6 @@ namespace AutofacUnitTest
         {
             var builder = new ContainerBuilder();
             builder.Register(a => new MyClass());
-
             IContainer container = builder.Build();
 
             var actual = container.Resolve<MyClass>();
@@ -72,7 +70,6 @@ namespace AutofacUnitTest
             var builder = new ContainerBuilder();
             builder.Register(a => new MyParameter());
             builder.Register(a => new MyClass(a.Resolve<MyParameter>()));
-
             IContainer container = builder.Build();
 
             Assert.IsNotNull(container.Resolve<MyClass>());
@@ -90,7 +87,6 @@ namespace AutofacUnitTest
             {
                 Property = a.Resolve<MyProperty>()
             });
-
             IContainer container = builder.Build();
 
             var actual = container.Resolve<MyClass>();
@@ -118,7 +114,6 @@ namespace AutofacUnitTest
                     return new TxtRepository();
                 }
             }).As<IRepository>();
-
             IContainer container = builder.Build();
 
             var actual = container.Resolve<IRepository>(new NamedParameter("type", "db"));
@@ -133,7 +128,6 @@ namespace AutofacUnitTest
         {
             var builder = new ContainerBuilder();
             builder.RegisterInstance(MyInstance.Instance()).ExternallyOwned();
-
             IContainer container = builder.Build();
 
             var actual = container.Resolve<MyInstance>();
@@ -149,7 +143,6 @@ namespace AutofacUnitTest
         {
             var builder = new ContainerBuilder();
             builder.RegisterGeneric(typeof(MyList<>));
-
             IContainer container = builder.Build();
 
             var actual = container.Resolve<MyList<int>>();
@@ -168,7 +161,6 @@ namespace AutofacUnitTest
             var builder = new ContainerBuilder();
             builder.RegisterType<DbRepository>().As<IRepository>();
             builder.RegisterType<TxtRepository>().As<IRepository>();
-
             IContainer container = builder.Build();
 
             var actual = container.Resolve<IRepository>();
@@ -184,7 +176,6 @@ namespace AutofacUnitTest
             var builder = new ContainerBuilder();
             builder.RegisterType<DbRepository>().As<IRepository>();
             builder.RegisterType<TxtRepository>().As<IRepository>().PreserveExistingDefaults();
-
             IContainer container = builder.Build();
 
             var actual = container.Resolve<IRepository>();
@@ -200,7 +191,6 @@ namespace AutofacUnitTest
             var builder = new ContainerBuilder();
             builder.RegisterType<DbRepository>().Named<IRepository>("DB");
             builder.RegisterType<TxtRepository>().Named<IRepository>("TXT");
-
             IContainer container = builder.Build();
 
             var actualDb = container.ResolveNamed<IRepository>("DB");
@@ -218,7 +208,6 @@ namespace AutofacUnitTest
             var builder = new ContainerBuilder();
             builder.RegisterType<MyParameter>();
             builder.RegisterType<MyClass>().UsingConstructor(typeof(MyParameter));
-
             IContainer container = builder.Build();
 
             var actual = container.Resolve<MyClass>();
@@ -235,7 +224,6 @@ namespace AutofacUnitTest
             builder.RegisterAssemblyTypes(AppDomain.CurrentDomain.GetAssemblies())
                 .Where(a => a.Name.EndsWith("Repository"))
                 .AsImplementedInterfaces();
-
             IContainer container = builder.Build();
 
             var actual = container.Resolve<IRepository>();

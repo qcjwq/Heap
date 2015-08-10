@@ -59,6 +59,7 @@
   <ItemGroup>
     <Compile Include="CycleDependenceUnitTest.cs" />
     <Compile Include="EventUnitTest.cs" />
+    <Compile Include="LifeTimeUnitTest.cs" />
     <Compile Include="RegisterTypeUnitTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
