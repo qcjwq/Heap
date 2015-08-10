@@ -44,15 +44,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DbRepository.cs" />
-    <Compile Include="IRepository.cs" />
-    <Compile Include="MyInstance.cs" />
-    <Compile Include="MyInterface.cs" />
-    <Compile Include="MyClass.cs" />
-    <Compile Include="MyParameter.cs" />
-    <Compile Include="MyProperty.cs" />
+    <Compile Include="CycleDependence\ClassA.cs" />
+    <Compile Include="CycleDependence\ClassB.cs" />
+    <Compile Include="Event\MyClassWithMethod.cs" />
+    <Compile Include="RegistType\DbRepository.cs" />
+    <Compile Include="Event\MyEvent.cs" />
+    <Compile Include="RegistType\IRepository.cs" />
+    <Compile Include="RegistType\MyInstance.cs" />
+    <Compile Include="RegistType\MyInterface.cs" />
+    <Compile Include="RegistType\MyClass.cs" />
+    <Compile Include="RegistType\MyList.cs" />
+    <Compile Include="RegistType\MyParameter.cs" />
+    <Compile Include="RegistType\MyProperty.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TxtRepository.cs" />
+    <Compile Include="RegistType\TxtRepository.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

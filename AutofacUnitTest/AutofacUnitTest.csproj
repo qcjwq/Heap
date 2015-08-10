@@ -57,6 +57,8 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="CycleDependenceUnitTest.cs" />
+    <Compile Include="EventUnitTest.cs" />
     <Compile Include="RegisterTypeUnitTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

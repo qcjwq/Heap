@@ -1,4 +1,4 @@
-﻿namespace AutofacTest
+﻿namespace AutofacTest.RegistType
 {
     public class MyInstance
     {

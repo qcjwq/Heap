@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Linq;
+using System.Reflection;
 using System.Runtime.Remoting;
 using Autofac;
+using Autofac.Builder;
 using Autofac.Core.Registration;
 using AutofacTest;
+using AutofacTest.RegistType;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NSubstitute;
 using NSubstitute.Core;
@@ -135,6 +139,107 @@ namespace AutofacUnitTest
             var actual = container.Resolve<MyInstance>();
             var actual2 = container.Resolve<MyInstance>();
             Assert.AreEqual(actual, actual2);
+        }
+
+        /// <summary>
+        /// 注册open generic类型
+        /// </summary>
+        [TestMethod]
+        public void Regitster_Open_Generic()
+        {
+            var builder = new ContainerBuilder();
+            builder.RegisterGeneric(typeof(MyList<>));
+
+            IContainer container = builder.Build();
+
+            var actual = container.Resolve<MyList<int>>();
+            Assert.IsNotNull(actual);
+
+            var actual2 = container.Resolve<MyList<string>>();
+            Assert.IsNotNull(actual2);
+        }
+
+        /// <summary>
+        /// 对于同一个接口，后面注册的实现会覆盖之前的实现
+        /// </summary>
+        [TestMethod]
+        public void Register_Order()
+        {
+            var builder = new ContainerBuilder();
+            builder.RegisterType<DbRepository>().As<IRepository>();
+            builder.RegisterType<TxtRepository>().As<IRepository>();
+
+            IContainer container = builder.Build();
+
+            var actual = container.Resolve<IRepository>();
+            Assert.AreEqual(typeof(TxtRepository), actual.GetType());
+        }
+
+        /// <summary>
+        /// 如果不想覆盖的话，可以用PreserveExistingDefaults，这样会保留原来注册的实现
+        /// </summary>
+        [TestMethod]
+        public void Register_Order_Defaults()
+        {
+            var builder = new ContainerBuilder();
+            builder.RegisterType<DbRepository>().As<IRepository>();
+            builder.RegisterType<TxtRepository>().As<IRepository>().PreserveExistingDefaults();
+
+            IContainer container = builder.Build();
+
+            var actual = container.Resolve<IRepository>();
+            Assert.AreEqual(typeof(DbRepository), actual.GetType());
+        }
+
+        /// <summary>
+        /// 可以用Name来区分不同的实现，代替As方法
+        /// </summary>
+        [TestMethod]
+        public void Register_With_Name()
+        {
+            var builder = new ContainerBuilder();
+            builder.RegisterType<DbRepository>().Named<IRepository>("DB");
+            builder.RegisterType<TxtRepository>().Named<IRepository>("TXT");
+
+            IContainer container = builder.Build();
+
+            var actualDb = container.ResolveNamed<IRepository>("DB");
+            var actualTxt = container.ResolveNamed<IRepository>("TXT");
+            Assert.AreEqual(typeof(DbRepository), actualDb.GetType());
+            Assert.AreEqual(typeof(TxtRepository), actualTxt.GetType());
+        }
+
+        /// <summary>
+        /// 如果一个类有多个构造函数的话，可以在注册时候选择不同的构造函数
+        /// </summary>
+        [TestMethod]
+        public void Chose_Construtors()
+        {
+            var builder = new ContainerBuilder();
+            builder.RegisterType<MyParameter>();
+            builder.RegisterType<MyClass>().UsingConstructor(typeof(MyParameter));
+
+            IContainer container = builder.Build();
+
+            var actual = container.Resolve<MyClass>();
+            Assert.IsNotNull(actual);
+        }
+
+        /// <summary>
+        /// 可以注册一个Assemble下所有的类，当然，也可以根据类型进行筛选
+        /// </summary>
+        [TestMethod]
+        public void Register_Assembly()
+        {
+            var builder = new ContainerBuilder();
+            builder.RegisterAssemblyTypes(AppDomain.CurrentDomain.GetAssemblies())
+                .Where(a => a.Name.EndsWith("Repository"))
+                .AsImplementedInterfaces();
+
+            IContainer container = builder.Build();
+
+            var actual = container.Resolve<IRepository>();
+            Assert.IsNotNull(actual);
         }
     }
 }
