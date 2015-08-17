@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Autofac.Util;
 using AutofacTest.RegistType.Implement;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -62,6 +63,26 @@ namespace AutofacUnitTest
             Assert.AreEqual(actual, actual2);
             Assert.AreNotEqual(actual2, actual3);
             Assert.AreEqual(actual3, actual4);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [TestMethod]
+        public void Life_Time_And_Dispose()
+        {
+            var builder = new ContainerBuilder();
+            builder.RegisterType<Disposable>();
+
+            using (IContainer container = builder.Build())
+            {
+                var outInstance = container.Resolve<Disposable>(new NamedParameter("name", "out"));
+
+                using (var inner = container.BeginLifetimeScope())
+                {
+                    var inInstance = container.Resolve<Disposable>(new NamedParameter("name", "in"));
+                }//inInstance dispose here
+            }//out dispose here
         }
     }
 }
